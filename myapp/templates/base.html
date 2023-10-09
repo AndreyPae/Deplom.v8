@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Website{% endblock %}</title>
+</head>
+<body>
+     <header>
+    <nav>
+      <ul>
+        <li><a href="{% url 'product_list' %}">Products</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'cart' %}">Cart</a></li>
+          <li><a href="{% url 'logout_view' %}">Logout</a></li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>
