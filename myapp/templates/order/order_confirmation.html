@@ -8,11 +8,11 @@
     {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Order confirmation</h1>
-  <p>Thank you for your order!</p>
-  <p>Order number: {{ order.id }}</p>
-  <p>Delivery method: {{ order.delivery_method }}</p>
-  <p>Total price: {{ order.items.all|aggregate(Sum('product__price')).get('product__price__sum') }}</p>
+  <h1>Подтверждение заказа</h1>
+  <p>Благодарим вас за ваш заказ!</p>
+  <p>Номер заказа: {{ order.id }}</p>
+  <p>Вы выбрали метод доставки: {{ order.delivery_method }}</p>
+  <p>Итоговая цена: {{ order.items.all|aggregate(Sum('product__price')).get('product__price__sum') }}</p>
 {% endblock %}
 </body>
 </html>

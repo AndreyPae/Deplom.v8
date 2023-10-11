@@ -25,7 +25,7 @@ class CategoryForm(forms.ModelForm):
 class CartItemForm(forms.ModelForm):
     class Meta:
         model = CartItem
-        fields = ['quantity']
+        fields = ['quantity', 'options']
 
 
 class OrderForm(forms.ModelForm):

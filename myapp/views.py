@@ -1,18 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 
-from .models import Product, Cart, CartItem, Order, OrderItem, Category, Tag
+from .models import Product, CartItem, Order, OrderItem, Category, Tag
 
 from .forms import ProductForm, CategoryForm, CartItemForm, OrderForm
 from .forms import CustomUserCreationForm
 
 
-@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def admin_view(request):
     # код представления для администраторов
@@ -50,7 +48,9 @@ def login_view(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            login(request, user
+
+                  )
             return redirect('base')
     return render(request, 'registration/login.html')
 
@@ -66,21 +66,22 @@ def logout_view(request):
 
 
 @login_required
-def product_list(request):
+def product_list(request, category_slug=None):
+    print(category_slug)
     query = request.GET.get('q')
-    category = request.GET.get('category')
+    categories = request.GET.get('categories')
     tag = request.GET.get('tag')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    available = request.GET.get('available')
+    available = bool(request.GET.get('available'))
 
     products = Product.objects.all()
 
     if query:
         products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
-    if category:
-        products = products.filter(category__name=category)
+    if categories:
+        products = products.filter(category__name=categories)
 
     if tag:
         products = products.filter(tags__name=tag)
@@ -102,7 +103,7 @@ def product_list(request):
         'categories': categories,
         'tags': tags,
         'query': query,
-        'category': category,
+        'categories': categories,
         'tag': tag,
         'min_price': min_price,
         'max_price': max_price,
@@ -239,15 +240,15 @@ def add_to_cart(request, product_id):
     if request.method == 'POST':
         form = CartItemForm(request.POST)
         if form.is_valid():
-            quantity = form.cleaned_data['quantity']
-            options = form.cleaned_data['options']
-            cart_item = CartItem(user=request.user, product=product, quantity=quantity, options=options)
-            cart_item.save()
+            # quantity = form.cleaned_data['quantity']
+            # options = form.cleaned_data['options']
+            # # cart = Cart.objects.get(user=request.user)  # Получаем текущую корзину пользователя
+            # cart_item = CartItem(user=request.user, product=product, quantity=quantity, options=options, cart=cart)
+            # cart_item.save()
             return redirect('cart')
     else:
         form = CartItemForm()
     return render(request, 'cart/add_to_cart.html', {'product': product, 'form': form})
-
 # <--- Изменения в корзине --->
 
 
@@ -263,9 +264,13 @@ def remove_from_cart(request, cart_item_id):
 
 @login_required
 def cart(request):
-    cart = Cart.objects.get(user=request.user)
-    cart_items = cart.cartitem_set.all()
-    return render(request, 'cart/cart.html', {'cart_items': cart_items})
+    try:
+        user = request.user
+        cart_items = CartItem.objects.filter(user=user).all()
+        return render(request, 'cart/cart.html', {'cart_items': cart_items})
+    except CartItem.DoesNotExist:
+        # Обработка случая, когда корзина не найдена
+        return render(request, 'cart/empty_cart.html')
 
 # <--- Информация об корзине --->
 
@@ -347,6 +352,13 @@ def user_orders(request):
 
 
 @login_required
-def order_confirmation(request, order_id):
-    order = Order.objects.get(id=order_id)
-    return render(request, 'order/order_confirmation.html', {'order': order})
+def order_confirmation(request):
+    order = Order.objects.get()
+    total_price = order.items.all().aggregate(Sum('product__price')).get('product__price__sum')
+
+    context = {
+        'order': order,
+        'total_price': total_price
+    }
+
+    return render(request, 'order_confirmation.html', context)

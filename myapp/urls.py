@@ -1,10 +1,12 @@
-from django.contrib.auth import logout
 from django.urls import path
-from django.contrib import admin
+# from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import register, base_view,login_view, logout_view, product_list, add_to_cart, cart, checkout, product_create, product_detail, product_update, product_delete, category_list, category_create, category_detail, category_update, category_delete, order_list, order_detail, cart_detail, cart_add, cart_update, cart_delete, user_orders
+from .views import register, base_view, login_view, logout_view, product_list, add_to_cart, cart, checkout, \
+    product_create, product_detail, product_update, product_delete, category_list, category_create, category_detail, \
+    category_update, category_delete, order_list, order_detail, cart_detail, cart_add, cart_update, cart_delete, \
+    user_orders, order_confirmation
 
 urlpatterns = [
     path('register/', register, name='register'),
@@ -17,11 +19,11 @@ urlpatterns = [
     # <--- Создание и редактирование продукта --->
 
     path('create/', product_create, name='product_create'),
-    path('<int:product_id>/', product_detail, name='product_detail'),
-    path('<int:product_id>/update/', product_update, name='product_update'),
-    path('<int:product_id>/delete/', product_delete, name='product_delete'),
-    path('<slug:category_slug>/', product_list, name='product_list_by_category'),
-    path('<slug:tag_slug>/', product_list, name='product_list_by_tag'),
+    path('product/<int:product_id>/', product_detail, name='product_detail'),
+    path('product/<int:product_id>/update/', product_update, name='product_update'),
+    path('product/<int:product_id>/delete/', product_delete, name='product_delete'),
+    path('product/<slug:category_slug>/', product_list, name='product_list_by_category'),
+    # path('product/<slug:tag_slug>/', product_list, name='product_list_by_tag'),
 
     # <--- Создание и редактирование категорий --->
 
@@ -36,6 +38,7 @@ urlpatterns = [
     path('orders/', order_list, name='order_list'),
     path('my-orders/', user_orders, name='my_orders'),
     path('orders/<int:order_id>/', order_detail, name='order_detail'),
+    path('order_confirmation/<int:order_id>', order_confirmation, name='order_confirmation'),
 
     # <--- Корзина --->
 

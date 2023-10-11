@@ -8,13 +8,13 @@
     {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Checkout</h1>
+  <h1>Проверте заказ</h1>
   <table>
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Price</th>
+        <th>Продукт</th>
+        <th>Колличество</th>
+        <th>Цена</th>
       </tr>
     </thead>
     <tbody>
@@ -27,11 +27,11 @@
       {% endfor %}
     </tbody>
   </table>
-  <h2>Order information</h2>
+  <h2>Ваши данные</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Place order</button>
+    <button type="submit">Подтвердить</button>
   </form>
 {% endblock %}
 </body>

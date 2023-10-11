@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Продукты</title>
 </head>
 <body>
 
 {% block content %}
-  <h1>Product List</h1>
+  <h1>Лист продуктов</h1>
 
   <form method="get">
     <div class="form-group">
-      <label for="q">Search:</label>
+      <label for="q">Поиск:</label>
       <input type="text" name="q" id="q" value="{{ query }}" class="form-control">
     </div>
 
     <div class="form-group">
-      <label for="category">Category:</label>
+      <label for="category">Категория:</label>
       <select name="category" id="category" class="form-control">
-        <option value="">All</option>
+        <option value="">Все</option>
         {% for category in categories %}
           <option value="{{ category.name }}" {% if category.name == category %}selected{% endif %}>{{ category.name }}</option>
         {% endfor %}
@@ -26,9 +26,9 @@
     </div>
 
     <div class="form-group">
-      <label for="tag">Tag:</label>
+      <label for="tag">Тег:</label>
       <select name="tag" id="tag" class="form-control">
-        <option value="">All</option>
+        <option value="">Все</option>
         {% for tag in tags %}
           <option value="{{ tag.name }}" {% if tag.name == tag %}selected{% endif %}>{{ tag.name }}</option>
         {% endfor %}
@@ -36,21 +36,21 @@
     </div>
 
     <div class="form-group">
-      <label for="min_price">Min Price:</label>
+      <label for="min_price">Мин. цена:</label>
       <input type="number" name="min_price" id="min_price" value="{{ min_price }}" class="form-control">
     </div>
 
     <div class="form-group">
-      <label for="max_price">Max Price:</label>
+      <label for="max_price">Макс. цена:</label>
       <input type="number" name="max_price" id="max_price" value="{{ max_price }}" class="form-control">
     </div>
 
     <div class="form-group">
-      <label for="available">Available:</label>
+      <label for="available">В наличии:</label>
       <input type="checkbox" name="available" id="available" {% if available %}checked{% endif %}>
     </div>
 
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" class="btn btn-primary">Поиск</button>
   </form>
 
   <hr>
@@ -66,10 +66,10 @@
               <p class="card-text">{{ product.description }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
-                  <a href="{% url 'add_to_cart' product.pk %}" class="btn btn-sm btn-outline-secondary">Add to Cart</a>
+                  <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-outline-secondary">Смотреть</a>
+                  <a href="{% url 'add_to_cart' product.pk %}" class="btn btn-sm btn-outline-secondary">Добавить в корзину</a>
                 </div>
-                <small class="text-muted">${{ product.price }}</small>
+                <small class="text-muted">{{ product.price }} Руб</small>
               </div>
             </div>
           </div>
@@ -77,7 +77,7 @@
       {% endfor %}
     </div>
   {% else %}
-    <p>No products found.</p>
+    <p>Продукты не найдены.</p>
   {% endif %}
 {% endblock %}
 </body>
